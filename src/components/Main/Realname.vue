@@ -15,13 +15,12 @@
       </ul>
     </div>
     <div class="prompt">
-      <span>特别提示：联系银行客服，请填写正确的开户行名称。</span>
+      <span>特别提示：请联系银行客服确定开户行名称，开户行名称错误将导致绑定失败。</span>
     </div>
     <div class="list">
       <ul >
-        <li><label><i>*</i>店铺名称：</label><input v-model="storename" type=" text" placeholder="显示开通服务时填写的名称 "></li>
+        <li><label><i>*</i>店铺名称：</label><input v-model="storename" type=" text" placeholder="请输入您的店铺名称 "></li>
       </ul>
-
        <ul v-if="ai">
         <p class='card'>请您手动输入身份证信息</p>
         <li><label><i>*</i>姓名：</label><input v-model="cardInfo.cname" type="text" placeholder="请输入姓名" ></li>
@@ -31,21 +30,21 @@
       </ul>
     </div>
     <div class="upload">
-      <div class="upload">
+      <div class="upload" >
         <form id="amig" enctype="multipart/form-data">
-          <div class="dimg just" @click="uppimg('persenImg1')">
+          <div class="dimg just" @click="uppimg('persenImg1')" v-if="!ai">
           <a v-if='!idcardsrc'> </a>
             <img v-if='idcardsrc' :src="idcardsrc"  alt="">
             <input  type="file" id="persenImg1" ref="persenImg" accept="image/*"
-                   @change="inputup($event,'persenImg')" name="persenImg">
+                   @change="ImgBase64($event,'persenImg')" name="persenImg">
             <!--<input type="file" accept="image/*" capture="camera">-->
           <!--<input type="file" accept="video/*" capture="camcorder">-->
           <!--<input type="file" accept="audio/*" capture="microphone">-->
         </div>
-        <div class="dimg back"  @click="uppimg('persenImgback')" >
+        <div class="dimg back"  @click="uppimg('persenImgback')" v-if="!ai">
           <a v-if='!backimg'></a>
           <img v-if='backimg' :src="backimg" alt="">
-          <input type="file" id="persenImgback" ref="persenImgback" accept="image/*" @change="inputup($event,'persenImgback')">
+          <input type="file" id="persenImgback" ref="persenImgback" accept="image/*" @change="ImgBase64($event,'persenImgback')">
         </div>
         <div class="dimg hic"  @click="uppimg('persentake')" >
           <a v-if='!persentake'></a>
@@ -96,19 +95,23 @@
     methods: {
       gosubmit(){
         if(!this.cashcardtype){
-          Toast('请填写银行卡号信息')
+          MessageBox.alert('请填写银行卡号信息', '提示');
           return
         }
         if(!(/(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/.test(this.phone))){
-          Toast('请填写正确手机号码')
+          MessageBox.alert('请填写正确手机号码', '提示');
           return
         }
         if(!this.province|| !this.city|| !this.county || !this.bankstreet){
-          Toast('请填写完整开户行信息')
+          MessageBox.alert('请填写完整开户行信息', '提示');
           return
         }
         if(!this.persentake ){
-          Toast('请填上传认证图片')
+          MessageBox.alert('请填上传手持身份证图片', '提示');
+          return
+        }
+        if(!this.cardInfo.idCardNo&&!this.cardInfo.cname &&!this.cardInfo.startdate&&!this.cardInfo.enddate){
+          MessageBox.alert('手动输入身份证信息，或上传身份证照片', '提示');
           return
         }
         Indicator.open()
@@ -143,7 +146,7 @@
                   window.location.href = "#/jpay/jpay"
                 })
             }else{
-              Toast(a.info)
+              MessageBox.alert(a.info, '提示');
             }
           }).catch(function (err) {
           });
@@ -184,7 +187,6 @@
         if(!fileList.length){
             return
         }
-        Indicator.open('身份上传认证中')
         var Orientation = null
         EXIF.getData(fileList[0], function () {
           Orientation = EXIF.getTag(fileList[0], 'Orientation');
@@ -197,13 +199,13 @@
           image.onload = function () {
             var expectWidth = image.naturalWidth;
             var expectHeight = image.naturalHeight;
-            // if (this.naturalWidth > this.naturalHeight && this.naturalWidth > 800) {
-            //   expectWidth = 800;
-            //   expectHeight = expectWidth * this.naturalHeight / this.naturalWidth;
-            // } else if (this.naturalHeight > this.naturalWidth && this.naturalHeight > 1200) {
-            //   expectHeight = 1200;
-            //   expectWidth = expectHeight * this.naturalWidth / this.naturalHeight;
-            // }
+            if (this.naturalWidth > this.naturalHeight && this.naturalWidth > 800) {
+              expectWidth = 800;
+              expectHeight = expectWidth * this.naturalHeight / this.naturalWidth;
+            } else if (this.naturalHeight > this.naturalWidth && this.naturalHeight > 1200) {
+              expectHeight = 1200;
+              expectWidth = expectHeight * this.naturalWidth / this.naturalHeight;
+            }
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
             canvas.width = expectWidth;
@@ -248,26 +250,6 @@
           reader.onload = function () {
             var result = this.result;    //data:base64
             var base64=result
-            var token = localStorage.getItem("token");
-            // axios.post(BASE_URL + '/index.php?r=CardjPay/checkIdCard', qs.stringify({
-            //   token: token,
-            //   type: 'face',
-            //   cardImg: base64
-            // })).then(function (res) {
-            //   Indicator.close()
-            //   console.log(res)
-            //   var a = Base64.decode(res.data)
-            //   a = JSON.parse(a)
-            //   if (a.code==10000&&a.data.err == "10000") {
-            //     _this.cardInfo.idCardNo = a.data.data.idCardNo
-            //     _this.cardInfo.cname = a.data.data.cname
-            //     _this.idcardsrc = a.data.data.cardImg
-            //   } else {
-            //     Toast(a.info)
-            //   }
-            // }).catch(function (err) {
-            //   Indicator.close()
-            // });
             _this.upimg(base64,dom)
           }
           reader.readAsDataURL(file);
@@ -321,6 +303,7 @@
          var  _this=this
         var token = localStorage.getItem("token");
         if (category == 'persenImg') {
+          Indicator.open('身份证照片上传中')
           axios.post(BASE_URL + '/index.php?r=CardjPay/checkIdCard', qs.stringify({
             token: token,
             type: 'face',
@@ -335,13 +318,14 @@
               _this.idcardsrc = a.data.data.cardImg
             } else {
               _this.ai=true
-              Toast(a.info)
+              MessageBox.alert('身份证识别失败，请您手动输入身份信息', '提示');
             }
           }).catch(function (err) {
             Indicator.close()
           });
         }
         if(category == 'persenImgback'){
+          Indicator.open('身份证照片上传中')
           axios.post(BASE_URL + '/index.php?r=CardjPay/checkIdCard', qs.stringify({
             token: token,
             type: 'back',
@@ -356,13 +340,14 @@
                 _this.backimg=a.data.data.cardImg
               } else {
                 _this.ai=true
-                Toast(a.info)
+                MessageBox.alert('身份证识别失败，请您手动输入身份信息', '提示');
               }
           }).catch(function (err) {
             Indicator.close()
           });
         }
         if(category == 'persentake'){
+          Indicator.open('手持照片上传中')
           axios.post(BASE_URL + '/index.php?r=Common/UploadImg', qs.stringify({
             fileImg: imgsrc,
             token:token
@@ -380,6 +365,7 @@
           });
         }
         if(category == 'trading'){
+          Indicator.open('营业执照上传中')
           axios.post(BASE_URL + '/index.php?r=Common/UploadImg', qs.stringify({
             fileImg: imgsrc,
             token:token
@@ -387,12 +373,14 @@
             Indicator.close()
             var a = Base64.decode(res.data)
             a = JSON.parse(a)
-            Toast(a.info)
             if (a.code==10000&&a.data.err == "10000") {
               _this.trading=a.data.data.imgUrl
+            }else{
+              Toast(a.info)
             }
           }).catch(function (err) {
              Indicator.close()
+
           });
         }
       },

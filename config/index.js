@@ -28,11 +28,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {//生产环境
-			 // '/index.php':{
-			 // 		target:'http://api.7shengqian.com/',
-			 // 		secure:true,
-			 // 		changeOrigin:true
-			 // },/.
+			 '/index.php':{
+			 		target:'https://api.7shengqian.com/',
+			 		secure:true,
+			 		changeOrigin:true
+			 },
       // '/index.php':{//预生成
       //   target:'https://tapi.7shengqian.com/',
       //   secure:true,
@@ -43,11 +43,11 @@ module.exports = {
 			//  		secure:true,
 			//  		changeOrigin:true
       //  	},
-      	 '/index.php':{//本地测试
-           target:'http://121.40.40.219:8601/',
-			 		secure:true,
-           changeOrigin: true
-       	},
+      // 	 '/index.php':{//本地测试
+      //      target:'http://121.40.40.219:8601/',
+		// 	 		secure:true,
+      //      changeOrigin: true
+      //  	},
 
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

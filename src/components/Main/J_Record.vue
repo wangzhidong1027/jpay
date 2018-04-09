@@ -1,5 +1,6 @@
 <template>
   <div class='record'>
+    <div>
     <div class="header">
       <div class="date">
         <p class="startDate"><i></i>
@@ -15,6 +16,7 @@
     <div class="nav">
       <span :class="state=='succeed'?'active':''" @click="change('succeed')">交易成功</span>
       <span :class="state=='defeated'?'active':''" @click="change('defeated')">交易失败</span>
+    </div>
     </div>
     <div class="record_list" >
       <div class="mylist">
@@ -71,7 +73,7 @@
         enddate:'',
         state:'succeed',
         page:'1',
-        recordlist:'',
+        recordlist:[],
         money:'',
         num:'',
         text:'交易成功'
@@ -118,6 +120,10 @@
             that.recordlist=a.data.data.rows
             that.num=a.data.data.totalCount
             that.money=a.data.data.countmoney
+            if(!that.recordlist.length){
+                Toast('暂无记录')
+            }
+            that.$refs.loadmore.onBottomLoaded();
           }else{
             Toast(a.info)
           }
@@ -258,14 +264,16 @@
     padding: 0 0.75rem;
     display: flex;
     flex: 1;
-    .mylist{
-      width: 100%;
-      height: 100%;
-      overflow: scroll;
-      ::-webkit-scrollbar{
-        display:none;
-      }
-    }
+    flex-flow: 1;
+    overflow: scroll;
+    /*.mylist{*/
+      /*width: 100%;*/
+      /*height: 100%;*/
+      /*overflow: scroll;*/
+      /*::-webkit-scrollbar{*/
+        /*display:none;*/
+      /*}*/
+    /*}*/
     .number{
       text-align: right;
       font-size: 0.6rem;

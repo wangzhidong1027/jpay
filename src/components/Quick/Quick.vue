@@ -100,9 +100,11 @@
 
       gopay(jpayminmoney,jpaymaxmoney,channelId,actualPay,open,flopen){
         if(open!='1'){
+          // Toast('该通道暂时不能使用')
           return
         }
         if(!flopen){
+          // Toast('该通道暂时不能使用')
           return
         }
         if( this.money.indexOf('.')==-1){

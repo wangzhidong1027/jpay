@@ -31,12 +31,10 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env,
      'BASE_URL': '"https://api.7shengqian.com"'          //生产
-    //  'BASE_URL': '"https://tapi.7shengqian.com"'         //预生成
-    //   'BASE_URL':'"http://testapi.7shengqian.com"'       //本地测试
-//      'BASE_URL': '"http://testapi.7shengqian.com:9528"'
-      //  'BASE_URL': '"http://121.40.40.219:8601"'
-
-
+     // 'BASE_URL': '"https://tapi.7shengqian.com"'         //预生成
+    //  'BASE_URL':'"http://testapi.7shengqian.com"'       //本地测试
+    //   'BASE_URL': '"http://testapi.7shengqian.com:9528"'
+      // 'BASE_URL': '"http://121.40.40.219:8601"'
 
     }),
     new webpack.optimize.UglifyJsPlugin({

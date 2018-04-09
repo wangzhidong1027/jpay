@@ -46,7 +46,7 @@
       year-format="{value} 年"
       month-format="{value} 月"
       date-format="{value} 日"
-      :startDate="new Date('1970-01-01')"
+      :startDate="new Date('1990-01-01')"
       :endDate="new Date('2070-12-31')"
       @confirm="handleConfirm">
     </mt-datetime-picker>
@@ -118,7 +118,8 @@
                 that.verification=''
               }
             }else{
-              Toast(edoc.info)
+              MessageBox.alert(edoc.info, '提示');
+
               that.verification=''
             }
 
@@ -128,22 +129,22 @@
       },
       getmsgcode(){
         if(this.bank==''){
-          Toast('请填写正确银行号码')
+          MessageBox.alert('请填写正确银行号码', '提示');
           this.bank = ""
           return
         }
         if((!(/(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/.test(this.mobile)))&&(this.mobile=='')){
-          Toast('请填写正确手机号码')
+          MessageBox.alert('请填写正确手机号码', '提示');
           this.mobile = ""
           return
         }
         if(this.date!=this.format ) {
-          Toast('请选择有效期日期')
+          MessageBox.alert('请选择有效期日期', '提示');
           this.date = ""
           return
         }
         if((!(/^\d{3}$/.test(this.cvv)))&&(this.cvv=='')){
-          Toast('请填写正确cvv2码')
+          MessageBox.alert('请填写正确cvv2码', '提示');
           this.cvv = ""
           return
         }
@@ -162,15 +163,13 @@
           var a=Base64.decode(res.data)
           a=JSON.parse(a)
           if(a.code==10000){
-
                 window.history.back(-1);
                  Toast('信用卡添加成功')
                 // that.showver=true
                 // that.smsSeq=a.data.data.smsSeq
                 // that.orderNo=a.data.data.orderNo
-
           }else{
-            Toast(a.info)
+            MessageBox.alert(a.info, '提示');
           }
         }).catch(function (err) {
 

@@ -7,14 +7,14 @@
 <script>
 
   export default{
-    name: 'main',
+    name: 'mymain',
     data() {
       return {
       }
     },
     methods: {},
     mounted() {
-     
+
     },
     updated() {
 
@@ -23,7 +23,7 @@
 
     },
     components: {
-     
+
     }
   }
 </script>

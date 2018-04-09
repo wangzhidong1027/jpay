@@ -1,6 +1,6 @@
 <template>
 	<div class="into-user">
-		<img src="../../assets/images/register.jpg"/>
+		<!-- <img src="../../assets/images/register.jpg"/> -->
 		<h5>操作成功</h5>
 		<p><a href="#/main">前往个人中心</a></p>
 
